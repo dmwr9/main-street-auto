@@ -31,6 +31,16 @@ class App extends Component {
   getVehicles() {
     // axios (GET)
     // setState with response -> vehiclesToDisplay
+    axios.get("https://joes-autos.herokuapp.com/api/vehicles")
+    .then( res => {
+      toast.success("Get them vehiculars!")
+      this.setState({
+        vehiclesToDisplay: res.data
+      });
+    }).catch( err => {
+      toast.error("Dag gum! Ain't got no vehickels")
+      console.log(err)
+    })
   }
 
   getPotentialBuyers() {
@@ -41,6 +51,16 @@ class App extends Component {
   sellCar(id) {
     // axios (DELETE)
     // setState with response -> vehiclesToDisplay
+    axios.delete(`https://joes-autos.herokuapp.com/api/vehicles/${id}`)
+    .then( res => {
+      toast.success("WE SOLD YOU'RE CAR!")
+      this.setState({
+        vehiclesToDisplay: res.data.vehicles
+      })
+    }).catch( err => {
+      console.log(err);
+      toast.error(`Womp womp. Didn't sell yo car`)
+    })
   }
 
   filterByMake() {
@@ -60,6 +80,16 @@ class App extends Component {
   updatePrice(priceChange, id) {
     // axios (PUT)
     // setState with response -> vehiclesToDisplay
+    axios.put(`https://joes-autos.herokuapp.com/api/vehicles/${id}/${priceChange}`)
+    .then( res =>{
+      toast.success(`Successfully moved the price ${priceChange}`)
+      this.setState({
+        vehiclesToDisplay: res.data.vehicles
+      })
+    }).catch( err => {
+      console.log(err)
+      toast.error("Failed to update price")
+    })
   }
 
   addCar() {
@@ -68,11 +98,18 @@ class App extends Component {
       model: this.model.value,
       color: this.color.value,
       year: this.year.value,
-      price: this.price.value,
+      price: +this.price.value,
     }
 
     // axios (POST)
     // setState with response -> vehiclesToDisplay
+    axios.post(`https://joes-autos.herokuapp.com/api/vehicles`, newCar)
+    .then( res => {
+      toast.success(`Successfully added your ${newCar.make} ${newCar.model} to the lot!`)
+      this.setState({
+        vehiclesToDisplay: res.data.vehicles
+      })
+    }).catch( err => toast.error('Sorry dawg, no dice.'))
   }
 
   addBuyer() {
